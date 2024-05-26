@@ -1,27 +1,58 @@
-import React, { useState } from 'react';
-import { MovieCard } from '../movie-card/movie-card';
-import { MovieView } from '../movie-view/movie-view'; // Make sure the path matches your folder structure
+import React, { useState, useEffect } from 'react';
+import { LoginView } from '../login-view/login-view';
+import { SignupView } from '../signup-view/signup-view';
 
 export const MainView = () => {
-    const [movies, setMovies] = useState([
-        { id: 1, title: "Bladerunner", director: "Ridley Scott", description: "Description here", image: "url_to_image", genre: "Sci-Fi" },
-        { id: 2, title: "Jurassic Park", director: "Steven Spielberg", description: "Description here", image: "url_to_image", genre: "Adventure" },
-        { id: 3, title: "Independence Day", director: "Roland Emmerich", description: "Description here", image: "url_to_image", genre: "Sci-Fi" },
-    ]);
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    const storedToken = localStorage.getItem("token");
+    const [movie, setMovie] = useState(null);
+    const [user, setUser] = useState(null);
+    const [token, setToken] = useState(null);
 
-    const [selectedMovie, setSelectedMovie] = useState(null);
+    useEffect(() => {
 
-    const handleMovieClick = (movie) => {
-        setSelectedMovie(movie);
-    };
+        console.log("User from localStorage:", user);  // Check what is retrieved from localStorage
+        console.log("Token from localStorage:", token);
+        if (!token) {
+            return;
+        }
 
-    if (selectedMovie) return <MovieView movieData={selectedMovie} onBackClick={() => setSelectedMovie(null)} />
+        fetch("https://myflixv1-deebdbd0b5ba.herokuapp.com/movies", {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            console.log(data);
+        });
+    }, [token])
+
+    if (!user) {
+        return (
+            <>
+                <LoginView onLoggedIn={(user, token) => {
+                    setUser(user);
+                    setToken(token);
+                }} />
+                {" or "}
+                <SignupView />
+            </>
+        );
+    }
+
+    if (!movie) {
+        return <div>Loading...</div>; // Handle loading state.
+    }
 
     return (
         <div>
-            {movies.map(movie => (
-                <MovieCard key={movie.id} movieData={movie} onMovieClick={handleMovieClick} />
-            ))}
+            <h1>Movie Details</h1>
+            <div>
+                <h3>{movie.title}</h3>
+                <img src={movie.image} alt={movie.title} />
+            </div>
+            <button onClick={() => { setUser(null); setToken(null); localStorage.clear(); }}>Logout</button>
         </div>
     );
 }

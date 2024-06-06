@@ -1,0 +1,57 @@
+.navbar-custom {
+    padding: 1rem 2rem; /* Add some padding for content spacing */
+    display: flex; /* Use flexbox for layout */
+    align-items: center; /* Align items vertically (optional) */
+  
+    .logo {
+      color: #fff; /* White color for the logo */
+      font-size: 1.8rem; /* Consistent font size */
+      font-weight: 700; /* Bold */
+      text-decoration: none;
+      transition: color 0.3s ease;
+      flex: 0 0 auto; /* Fix width, prevent shrinking */
+  
+      &:hover {
+        color: #f2aa4c; /* Orange color on hover */
+      }
+    }
+  
+    .nav {
+      flex: 1; /* Allow remaining space for links */
+      justify-content: center; /* Center links horizontally */
+    }
+  
+    .nav-link {
+      color: #e0e0e0; /* Light gray color for links */
+      font-size: 1rem; /* Smaller font size */
+      font-weight: 500; /* Slightly bold */
+      text-decoration: none;
+      padding: 0.5rem 1rem; /* Add padding for spacing */
+      border-radius: 4px; /* Rounded corners */
+      margin-right: 1rem; /* Right margin for spacing */
+      transition: background-color 0.3s ease;
+  
+      &:hover {
+        background-color: #292a32; /* Darker background on hover */
+        color: #fff; /* White text on hover */
+      }
+    }
+  
+    .navbar-toggler {
+      border: none; /* Remove default border */
+      background-color: transparent; /* Transparent background */
+      padding: 0; /* Remove default padding */
+      margin-left: auto; /* Align to the right side */ /* Optional for centered toggler on mobile */
+  
+      .navbar-toggler-icon {
+        color: #fff; /* White color for the icon */
+        font-size: 1.5rem; /* Larger icon size */
+        transition: transform 0.3s ease; /* Add a hover transform */
+  
+        &:hover {
+          transform: scale(1.1); /* Slightly scale up on hover */
+        }
+      }
+    }
+  }
+  

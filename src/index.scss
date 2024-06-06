@@ -1,5 +1,6 @@
-$color: steelblue;
-
-.my-flix {
-  color: $color;
+body {
+  background: linear-gradient(to left, #000000 0%, #350b0b 100%);
+  color: #fff; // Ensures all text is white by default
+  font-family: 'Arial', sans-serif; // Example font
+  height: 100vh; // Ensures the gradient covers the full height
 }

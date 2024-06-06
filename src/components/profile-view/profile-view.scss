@@ -1,0 +1,87 @@
+/* General Button Styles */
+.button {
+    padding: 10px 20px;
+    background-color: #E50914;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+
+    &:hover {
+        background-color: darken(#E50914, 10%);
+    }
+}
+
+/* Profile View Container */
+.profile-container {
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Profile Form */
+.profile-form {
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: none; /* Remove shadow */
+}
+
+.profile-form h1 {
+    color: #ffffff;
+    margin-bottom: 1.5rem;
+    font-size: 2rem;
+}
+
+.profile-form .form-group {
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.profile-form .form-label {
+    font-weight: bold;
+    color: #ffffff;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    flex: 0 0 25%;
+}
+
+.profile-form .form-control {
+    border: 1px solid #444444; /* Darker border for better contrast */
+    border-radius: 4px;
+    background-color: transparent;
+    color: #ffffff;
+    padding: 0.75rem;
+    font-size: 1rem;
+    flex: 0 0 75%;
+}
+
+.profile-form .form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.profile-form .btn-primary {
+    @extend .button; /* Use the general button styles */
+    width: fit-content; /* Fit the button width to its content */
+    align-self: flex-end;
+}
+
+/* Favorite Movies Section */
+.favorite-movies {
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: none; /* Remove shadow */
+    display: flex; /* Enable flexbox layout */
+    flex-wrap: nowrap; /* Ensures cards don't wrap to multiple lines */
+    overflow-x: scroll; /* Add scroll if content overflows horizontally */
+    gap: 1rem; /* Add space between cards */
+}
+
+.favorite-movies h2 {
+    color: #ffffff;
+    margin-bottom: 1.5rem;
+}

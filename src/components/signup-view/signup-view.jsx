@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Form } from "react-bootstrap";
+import { useNavigate } from 'react-router-dom';
 import '../signup-view/signup-view.scss';
 
 export const SignupView = () => {
@@ -7,6 +8,8 @@ export const SignupView = () => {
     const [password, setPassword] = useState("");
     const [email, setEmail] = useState("");
     const [birthday, setBirthday] = useState("");
+
+    const navigate = useNavigate();
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -26,8 +29,7 @@ export const SignupView = () => {
         }).then(response => response.json())
           .then(data => {
             alert("Signup successful. Welcome!");
-            
-            // Handle redirection or state updates here
+            navigate("/login");
           })
           .catch(error => {
             alert("Signup failed. Please try again.");

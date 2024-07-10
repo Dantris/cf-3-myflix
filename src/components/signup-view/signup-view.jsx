@@ -16,10 +16,25 @@ export const SignupView = () => {
             email: email,
             birthday: birthday
         };
-
-        // Your fetch implementation here...
-
+    
+        fetch("https://myflixv1-deebdbd0b5ba.herokuapp.com/users", {
+            method: "POST",
+            body: JSON.stringify(data),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).then(response => response.json())
+          .then(data => {
+            alert("Signup successful. Welcome!");
+            
+            // Handle redirection or state updates here
+          })
+          .catch(error => {
+            alert("Signup failed. Please try again.");
+            console.error('Error:', error);
+          });
     };
+    
 
     return (
         <div className="signup-container">

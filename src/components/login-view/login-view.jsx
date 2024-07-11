@@ -12,7 +12,31 @@ export const LoginView = ({ onLoggedIn }) => {
     const handleSubmit = (event) => {
         event.preventDefault();
         const data = { username, password };
+
         // Implement your fetch call here
+        fetch('https://myflixv1-deebdbd0b5ba.herokuapp.com/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log("Login response: ", data);
+            if (data.user) {
+                localStorage.setItem("user", JSON.stringify(data.user));
+                localStorage.setItem("token", data.token);
+                onLoggedIn(data.user, data.token);
+                navigate("/");
+            } else {
+                alert("No such user");
+            }
+        })
+        .catch(e => {
+            console.error("Login failed:", e);
+            alert("Something went wrong");
+        });
     };
 
     return (

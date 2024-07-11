@@ -1,7 +1,8 @@
-/* Signup View Container */
-.signup-container {
+/* Login View Container */
+.login-container {
     padding: 2rem;
     border-radius: 8px;
+    background-color: #333; /* Dark background for contrast */
     color: #ffffff; /* White text color for readability */
     width: 100%;
     max-width: 500px;
@@ -13,39 +14,40 @@
     box-shadow: 0 0 8px 0;
     background: inherit;
     backdrop-filter: blur(10px);
+    
 }
 
 /* General Form Styling */
 .form-group {
     margin-bottom: 1.5rem;
-    width: 100%;  /* Ensures the form group takes full width */
+    width: 100%; /* Full width for alignment */
 }
 
 .form-label {
-    display: block;  /* Ensures the label is on a new line */
+    display: block; /* Ensures label appears above the input */
     font-weight: bold;
+    color: #ffffff; /* White label for readability on dark background */
     margin-bottom: 0.5rem; /* Space between label and input */
-    color: #ffffff; /* Keeps label text white for readability */
 }
 
 .form-control {
-    display: block;  /* Ensures the input is on a new line */
-    width: 100%;  /* Full width to match label */
+    display: block; /* Ensures input appears on a new line */
+    width: 100%; /* Full width to match the label */
     padding: 0.75rem;
-    border: 1px solid #444; /* Darker border for contrast */
+    border: 1px solid #444; /* Darker border for visual contrast */
     border-radius: 4px;
-    background-color: transparent; /* Transparent background for inputs */
+    background-color: transparent; /* Transparent background for a sleek look */
     color: #ffffff; /* White input text for visibility */
     font-size: 1rem;
 }
 
 .form-control:focus {
-    border-color: #007bff; /* Blue border on focus */
-    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); /* Subtle glow on focus */
+    border-color: #007bff; /* Highlighted blue border on focus */
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); /* Subtle blue glow on focus */
 }
 
-/* Button Styling to Match Profile Button */
-.button {
+/* Button Styling to Match Other Forms */
+.button-primary {
     padding: 10px 20px;
     background-color: #E50914; /* Netflix red for buttons */
     color: white;
@@ -54,10 +56,10 @@
     font-size: 1rem;
     cursor: pointer;
     transition: background-color 0.3s;
-    width: 100%;  /* Full width for consistency with input fields */
+    width: 100%; /* Full-width button for a consistent look */
     margin-top: 1rem; /* Space above the button */
 
     &:hover {
-        background-color: #f22030; /* Slightly darker red on hover */
+        background-color: #f22030; /* Darken red on hover for interactive feedback */
     }
 }

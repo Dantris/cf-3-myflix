@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Button, Container, Card, Alert } from 'react-bootstrap';
 import { MovieCard } from '../movie-card/movie-card';
+import { useNavigate } from 'react-router-dom';  // Ensure you're using the correct import for navigate
 import './profile-view.scss'; // Import the SCSS file
 
-export const ProfileView = ({ user, token, onUpdatedUser }) => {
+export const ProfileView = ({ user, token, onUpdatedUser, onLoggedOut }) => {
+    const navigate = useNavigate();
+
     const [username, setUsername] = useState(user.username);
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState(user.email);
@@ -67,6 +70,36 @@ export const ProfileView = ({ user, token, onUpdatedUser }) => {
         }
     };
 
+    const handleDelete = async () => {
+        const confirm = window.confirm("Are you sure you want to delete your account? This cannot be undone.");
+        if (confirm) {
+            setLoading(true);
+            try {
+                const response = await fetch(`https://myflixv1-deebdbd0b5ba.herokuapp.com/users/${username}`, {
+                    method: 'DELETE',
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`Failed to delete profile: ${errorText}`);
+                }
+                if (typeof onLoggedOut === 'function') {
+                    onLoggedOut();  // Call onLoggedOut if it's indeed a function
+                }
+                localStorage.clear(); // Clear all local storage
+                sessionStorage.clear(); // Clear all session storage if used
+                navigate('/login', { replace: true }); // Navigate to login page
+            } catch (error) {
+                console.error('Error deleting profile:', error);
+                setError(`Error deleting profile: ${error.message}`);
+            } finally {
+                setLoading(false);
+            }
+        }
+    };
+
     return (
         <Container className="profile-container">
             <Form className="profile-form" onSubmit={handleUpdate}>
@@ -88,9 +121,14 @@ export const ProfileView = ({ user, token, onUpdatedUser }) => {
                     <Form.Label className="form-label" htmlFor="formBirthday">Birthday:</Form.Label>
                     <Form.Control className="form-control" id="formBirthday" type="date" value={birthday} onChange={e => setBirthday(e.target.value)} />
                 </div>
-                <Button className="btn-primary" type="submit" disabled={loading}>
-                    {loading ? 'Updating...' : 'Update Profile'}
-                </Button>
+                <div className="d-flex justify-content-center gap-5">
+                    <Button className="btn-primary" type="submit" disabled={loading}>
+                        {loading ? 'Updating...' : 'Update Profile'}
+                    </Button>
+                    <Button variant="danger" onClick={handleDelete} disabled={loading} className="btn-primary">
+                        Delete Account
+                    </Button>
+                </div>
             </Form>
 
             <h2>Favorite Movies</h2>

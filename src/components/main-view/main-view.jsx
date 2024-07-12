@@ -15,6 +15,7 @@ export const MainView = () => {
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("user") || 'null'));
   const [token, setToken] = useState(localStorage.getItem("token"));
   const [movies, setMovies] = useState([]);
+  const [isUserDeleted, setIsUserDeleted] = useState(false); // New state to track user deletion
 
   useEffect(() => {
     if (!token) return;
@@ -41,7 +42,12 @@ export const MainView = () => {
     setToken(null);
   };
 
-  console.log('User at MainView:', user); // Debug: Check the user object here
+  useEffect(() => {
+    if (user) {
+      // Assuming user is null after deletion
+      setIsUserDeleted(!user);
+    }
+  }, [user]);
 
   return (
     <BrowserRouter>
@@ -51,18 +57,31 @@ export const MainView = () => {
           <Route path="/signup" element={<SignupView />} />
           <Route path="/login" element={<LoginView onLoggedIn={handleLoggedIn} />} />
           <Route path="/movies/:movieId" element={<MovieView />} />
-          <Route path="/profile" element={user ? <ProfileView user={user} token={token} onUpdatedUser={setUser} /> : <Navigate to="/login" />} />
-          <Route path="/" element={user ? (
-            <Row>
-              {movies.map((movie) => (
-                <Col key={movie._id} xs={12} sm={6} md={4} lg={3}>
-                  <MovieCard movie={movie} user={user} token={token}/>
-                </Col>
-              ))}
-            </Row>
-          ) : (
-            <Home />
-          )} />
+          <Route path="/profile" element={
+            user ? (
+              <ProfileView 
+                user={user} 
+                token={token} 
+                onUpdatedUser={setUser} 
+                onLoggedOut={() => setIsUserDeleted(true)}
+              />
+            ) : (
+              <Navigate to="/login" replace={true} />
+            )
+          } />
+          <Route path="/" element={
+            user ? (
+              <Row>
+                {movies.map((movie) => (
+                  <Col key={movie._id} xs={12} sm={6} md={4} lg={3}>
+                    <MovieCard movie={movie} user={user} token={token}/>
+                  </Col>
+                ))}
+              </Row>
+            ) : (
+              <Home />
+            )
+          } />
         </Routes>
       </Container>
     </BrowserRouter>

@@ -12,7 +12,6 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
 
     return (
         <Navbar expand="lg" className="navbar-custom">
-            <Container>
                 <Navbar.Brand as={Link} to="/" className="logo">
                     MyFlix
                 </Navbar.Brand>
@@ -32,7 +31,6 @@ export const NavigationBar = ({ user, onLoggedOut }) => {
                         )}
                     </Nav>
                 </Navbar.Collapse>
-            </Container>
         </Navbar>
     );
 };

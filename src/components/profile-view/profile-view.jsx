@@ -11,7 +11,7 @@ export const ProfileView = ({ user, token, onUpdatedUser, onLoggedOut }) => {
     const [username, setUsername] = useState(user.username);
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState(user.email);
-    const [birthday, setBirthday] = useState(user.birthday && user.birthday.split('T')[0]);
+    const [birthday, setBirthday] = useState(user.birthday ? new Date(user.birthday).toISOString().split('T')[0] : '');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const { favoriteMovies, setFavoriteMovies } = useMovieContext(); // Import the useMovieContext hook as global state instead of local state
@@ -59,18 +59,23 @@ export const ProfileView = ({ user, token, onUpdatedUser, onLoggedOut }) => {
                 })
             });
             if (!response.ok) {
-                throw new Error('Failed to update profile.');
+                throw new Error('Failed to update profile. Status Code: ' + response.status);
             }
             const data = await response.json();
             onUpdatedUser(data);
             alert('Profile updated successfully!');
         } catch (error) {
             console.error('Error updating profile:', error);
-            setError(error.message);
+            if (error.message === 'Failed to fetch') {
+                setError('Network error: Please check your internet connection and try again.');
+            } else {
+                setError(error.message);
+            }
         } finally {
             setLoading(false);
         }
     };
+    
 
     const handleDelete = async () => {
         const confirm = window.confirm("Are you sure you want to delete your account? This cannot be undone.");

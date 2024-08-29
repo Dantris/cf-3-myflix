@@ -7,8 +7,6 @@ import FavoriteButton from '../favorite-button/favorite-button';
 import '../movie-card/movie-card.scss';
 
 export const MovieCard = ({ movie, user, token }) => {
-    console.log('User at MovieCard:', user);
-
     return (
         <Card className="movie-card h-100">
             <Card.Img variant="top" src={movie.image || 'default-image.jpg'} alt={movie.title} className="card-img-top" />
@@ -18,9 +16,7 @@ export const MovieCard = ({ movie, user, token }) => {
                 <Link to={`/movies/${encodeURIComponent(movie._id)}`}>
                     <Button className="back-button">See more</Button>
                 </Link>
-                <FavoriteButton user={user} movie={movie} token={token} onFavoritesUpdate={(favorites) => {
-                    user.favoriteMovies = favorites;
-                }} />
+                <FavoriteButton user={user} movie={movie} token={token} /> 
             </Card.Body>
         </Card>
     );

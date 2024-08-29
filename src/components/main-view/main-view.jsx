@@ -10,13 +10,13 @@ import { ProfileView } from '../profile-view/profile-view';
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import { useMovieContext } from "../../context/MovieContext";
 
 export const MainView = () => {
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("user") || 'null'));
   const [token, setToken] = useState(localStorage.getItem("token"));
-  const [movies, setMovies] = useState([]);
   const [isUserDeleted, setIsUserDeleted] = useState(false); // New state to track user deletion
-
+  const { movies, setMovies } = useMovieContext(); // Import the useMovieContext hook to track global movie state
   useEffect(() => {
     if (!token) return;
     fetch("https://myflixv1-deebdbd0b5ba.herokuapp.com/movies", {

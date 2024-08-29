@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Button, Container, Card, Alert } from 'react-bootstrap';
 import { MovieCard } from '../movie-card/movie-card';
-import { useNavigate } from 'react-router-dom';  // Ensure you're using the correct import for navigate
-import './profile-view.scss'; // Import the SCSS file
-import { useMovieContext } from '../../context/MovieContext'; // Import the useMovieContext hook
+import { useNavigate } from 'react-router-dom';
+import './profile-view.scss';
+import { useMovieContext } from '../../context/MovieContext';
 
 export const ProfileView = ({ user, token, onUpdatedUser, onLoggedOut }) => {
     const navigate = useNavigate();
@@ -14,8 +14,7 @@ export const ProfileView = ({ user, token, onUpdatedUser, onLoggedOut }) => {
     const [birthday, setBirthday] = useState(user.birthday ? new Date(user.birthday).toISOString().split('T')[0] : '');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
-    const { favoriteMovies, setFavoriteMovies } = useMovieContext(); // Import the useMovieContext hook as global state instead of local state
-
+    const { favoriteMovies, setFavoriteMovies } = useMovieContext();
 
     useEffect(() => {
         const fetchFavorites = async () => {
@@ -31,6 +30,12 @@ export const ProfileView = ({ user, token, onUpdatedUser, onLoggedOut }) => {
 
                 const userData = await userResponse.json();
                 setFavoriteMovies(userData.favoriteMovies);
+
+                if (userData.birthday) {
+                    const parsedBirthday = new Date(userData.birthday).toISOString().split('T')[0];
+                    setBirthday(parsedBirthday);
+                }
+
             } catch (error) {
                 setError(error.message);
             } finally {
@@ -39,13 +44,13 @@ export const ProfileView = ({ user, token, onUpdatedUser, onLoggedOut }) => {
         };
 
         fetchFavorites();
-    }, [user.username, token]);
+    }, [user.username, token, setFavoriteMovies]);
 
     const handleUpdate = async (e) => {
         e.preventDefault();
         setLoading(true);
         try {
-            const response = await fetch(`https://myflixv1-deebdbd0b5ba.herokuapp.com/users/${username}`, {
+            const response = await fetch(`https://myflixv1-deebdbd0b5ba.herokuapp.com/users/${user.username}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -53,29 +58,29 @@ export const ProfileView = ({ user, token, onUpdatedUser, onLoggedOut }) => {
                 },
                 body: JSON.stringify({
                     username,
-                    password: password ? password : undefined,
+                    password: password || undefined,
                     email,
                     birthday
                 })
             });
+
             if (!response.ok) {
                 throw new Error('Failed to update profile. Status Code: ' + response.status);
             }
-            const data = await response.json();
-            onUpdatedUser(data);
-            alert('Profile updated successfully!');
+
+            alert('Profile updated successfully! Please log in again with your new username.');
+
+            localStorage.clear();
+            sessionStorage.clear();
+            navigate('/login', { replace: true });
+
         } catch (error) {
             console.error('Error updating profile:', error);
-            if (error.message === 'Failed to fetch') {
-                setError('Network error: Please check your internet connection and try again.');
-            } else {
-                setError(error.message);
-            }
+            setError(error.message);
         } finally {
             setLoading(false);
         }
     };
-    
 
     const handleDelete = async () => {
         const confirm = window.confirm("Are you sure you want to delete your account? This cannot be undone.");
@@ -88,16 +93,19 @@ export const ProfileView = ({ user, token, onUpdatedUser, onLoggedOut }) => {
                         Authorization: `Bearer ${token}`
                     }
                 });
+
                 if (!response.ok) {
                     const errorText = await response.text();
                     throw new Error(`Failed to delete profile: ${errorText}`);
                 }
-                if (typeof onLoggedOut === 'function') {
-                    onLoggedOut();  // Call onLoggedOut if it's indeed a function
-                }
-                localStorage.clear(); // Clear all local storage
-                sessionStorage.clear(); // Clear all session storage if used
-                navigate('/login', { replace: true }); // Navigate to login page
+
+                localStorage.clear();
+                sessionStorage.clear();
+
+                // After deleting the account, log out the user
+                onLoggedOut();
+                navigate('/login', { replace: true });
+
             } catch (error) {
                 console.error('Error deleting profile:', error);
                 setError(`Error deleting profile: ${error.message}`);

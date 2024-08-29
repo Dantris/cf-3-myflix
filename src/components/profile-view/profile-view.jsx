@@ -3,6 +3,7 @@ import { Form, Button, Container, Card, Alert } from 'react-bootstrap';
 import { MovieCard } from '../movie-card/movie-card';
 import { useNavigate } from 'react-router-dom';  // Ensure you're using the correct import for navigate
 import './profile-view.scss'; // Import the SCSS file
+import { useMovieContext } from '../../context/MovieContext'; // Import the useMovieContext hook
 
 export const ProfileView = ({ user, token, onUpdatedUser, onLoggedOut }) => {
     const navigate = useNavigate();
@@ -11,9 +12,10 @@ export const ProfileView = ({ user, token, onUpdatedUser, onLoggedOut }) => {
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState(user.email);
     const [birthday, setBirthday] = useState(user.birthday && user.birthday.split('T')[0]);
-    const [favorites, setFavorites] = useState(user.favoriteMovies || []);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+    const { favoriteMovies, setFavoriteMovies } = useMovieContext(); // Import the useMovieContext hook as global state instead of local state
+
 
     useEffect(() => {
         const fetchFavorites = async () => {
@@ -28,7 +30,7 @@ export const ProfileView = ({ user, token, onUpdatedUser, onLoggedOut }) => {
                 }
 
                 const userData = await userResponse.json();
-                setFavorites(userData.favoriteMovies);
+                setFavoriteMovies(userData.favoriteMovies);
             } catch (error) {
                 setError(error.message);
             } finally {
@@ -134,7 +136,7 @@ export const ProfileView = ({ user, token, onUpdatedUser, onLoggedOut }) => {
             <h2>Favorite Movies</h2>
             {loading ? <p>Loading...</p> : (
                 <Container className="favorite-movies">
-                    {favorites.length > 0 ? favorites.map(movie => (
+                    {favoriteMovies.length > 0 ? favoriteMovies.map(movie => (
                         <Card key={movie._id} className="mb-3 card">
                             <MovieCard movie={movie} user={user} token={token} />
                         </Card>

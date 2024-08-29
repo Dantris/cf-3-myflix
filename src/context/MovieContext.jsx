@@ -1,3 +1,4 @@
+import { createContext, useContext, useState, useEffect } from "react";
 /**
  * Context API for managing movie data.
  *
@@ -9,6 +10,8 @@
  *
  * @constant
  * @type {React.Context<MovieContextState>}
+ * 
+ * @see https://react.dev/learn/passing-data-deeply-with-context
  */
 export const MovieContext = createContext({
   movies: [],

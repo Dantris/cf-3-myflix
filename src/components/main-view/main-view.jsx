@@ -5,7 +5,6 @@ import { MovieView } from "../movie-view/movie-view";
 import { LoginView } from '../login-view/login-view';
 import { SignupView } from "../signup-view/signup-view";
 import { NavigationBar } from '../navigation-bar/navigation-bar';
-import { Home } from '../home/home'; // Import the Home component
 import { ProfileView } from '../profile-view/profile-view';
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
@@ -15,8 +14,8 @@ import { useMovieContext } from "../../context/MovieContext";
 export const MainView = () => {
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("user") || 'null'));
   const [token, setToken] = useState(localStorage.getItem("token"));
-  const [isUserDeleted, setIsUserDeleted] = useState(false); // New state to track user deletion
   const { movies, setMovies } = useMovieContext(); // Import the useMovieContext hook to track global movie state
+
   useEffect(() => {
     if (!token) return;
     fetch("https://myflixv1-deebdbd0b5ba.herokuapp.com/movies", {
@@ -42,13 +41,6 @@ export const MainView = () => {
     setToken(null);
   };
 
-  useEffect(() => {
-    if (user) {
-      // Assuming user is null after deletion
-      setIsUserDeleted(!user);
-    }
-  }, [user]);
-
   return (
     <BrowserRouter>
       <NavigationBar user={user} onLoggedOut={handleLoggedOut} />
@@ -56,14 +48,16 @@ export const MainView = () => {
         <Routes>
           <Route path="/signup" element={<SignupView />} />
           <Route path="/login" element={<LoginView onLoggedIn={handleLoggedIn} />} />
-          <Route path="/movies/:movieId" element={<MovieView />} />
+          <Route path="/movies/:movieId" element={
+            user ? <MovieView movies={movies} /> : <Navigate to="/login" replace />
+          } />
           <Route path="/profile" element={
             user ? (
               <ProfileView 
                 user={user} 
                 token={token} 
                 onUpdatedUser={setUser} 
-                onLoggedOut={() => setIsUserDeleted(true)}
+                onLoggedOut={handleLoggedOut} 
               />
             ) : (
               <Navigate to="/login" replace={true} />
@@ -79,7 +73,7 @@ export const MainView = () => {
                 ))}
               </Row>
             ) : (
-              <Home />
+              <Navigate to="/login" replace={true} />
             )
           } />
         </Routes>

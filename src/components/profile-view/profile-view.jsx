@@ -72,6 +72,7 @@ export const ProfileView = ({ user, token, onUpdatedUser, onLoggedOut }) => {
 
             localStorage.clear();
             sessionStorage.clear();
+            onLoggedOut();  // Clear user and token in parent component
             navigate('/login', { replace: true });
 
         } catch (error) {
@@ -103,7 +104,7 @@ export const ProfileView = ({ user, token, onUpdatedUser, onLoggedOut }) => {
                 sessionStorage.clear();
 
                 // After deleting the account, log out the user
-                onLoggedOut();
+                onLoggedOut(); // Clear user and token in parent component
                 navigate('/login', { replace: true });
 
             } catch (error) {
